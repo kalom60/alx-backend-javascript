@@ -7,7 +7,7 @@ export default function handleProfileSignup(firstName, lastName, fileName) {
     .then((res) => {
       res.forEach((r) => ({
         status: r.status,
-        value: r.value === 'fillfulled' ? r.value : r.reason,
+        value: r.value === 'fillfulled' ? r.value : String(r.reason),
       }));
     });
 }
