@@ -1,6 +1,7 @@
 const cleanSet = (set, startString) => {
   if (
-    typeof set !== 'object'
+    !set
+    || !(set instanceof Set)
     || typeof startString !== 'string'
     || startString.length === 0
   ) {
