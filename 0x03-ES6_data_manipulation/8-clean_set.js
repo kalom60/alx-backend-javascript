@@ -1,4 +1,12 @@
 const cleanSet = (set, startString) => {
+  if (
+    typeof set !== 'object'
+    || typeof startString !== 'string'
+    || startString.length === 0
+  ) {
+    return '';
+  }
+
   const newString = [];
   for (const str of set.values()) {
     if (str.startsWith(startString)) {
