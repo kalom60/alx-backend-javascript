@@ -12,9 +12,9 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-app.get('/students', (req, res) => {
+app.get('/students', async (req, res) => {
   if (fs.existsSync(db)) {
-    fsPromise.readFile(db)
+    await fsPromise.readFile(db)
       .then((data) => {
         const lines = data.toString().split('\n');
         let response = lines.filter((item) => item);
