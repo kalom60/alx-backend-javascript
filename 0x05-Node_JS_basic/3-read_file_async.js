@@ -5,6 +5,7 @@ const countStudents = (dataPath) => { //eslint-disable-line
     fs.readFile(dataPath, 'utf-8', (err, data) => {
       if (err) {
         reject(Error('Cannot load the database'));
+        return;
       }
       const lines = data.split('\n').slice(1);
       const cs = [];
