@@ -2,10 +2,11 @@ const express = require('express');
 const fs = require('fs');
 
 const fsPromise = fs.promises;
-const app = express();
 const port = 1245;
-
 const db = process.argv[2];
+const host = 'localhost';
+
+const app = express();
 
 app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
@@ -43,7 +44,7 @@ app.get('/students', (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, host, () => {
   // console.log(`Example app listening on port ${port}`);
 });
 
