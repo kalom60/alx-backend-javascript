@@ -1,50 +1,25 @@
 const http = require('http');
-const fs = require('fs');
 
-const fsPromise = fs.promises;
 const db = process.argv.slice(2)[0];
 const host = 'localhost';
 const port = 1245;
 
+const countStudents = require('./3-read_file_async');
+
 const app = http.createServer((req, res) => {
+  res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-
-  const { url } = req;
-
-  if (url === '/') {
-    res.writeHead(200);
+  if (req.url === '/') {
     res.end('Hello Holberton School!');
-  } else if (url === '/students') {
-    if (fs.existsSync(db)) {
-      fsPromise.readFile(db)
-        .then((data) => {
-          res.writeHead(200);
-          const lines = data.toString().split('\n');
-          let response = lines.filter((item) => item);
-          response = response.map((item) => item.split(','));
-
-          const cs = [];
-          const swe = [];
-          for (const i of response) {
-            for (let j = 0; j < i.length; j += 1) {
-              if (i[j] === 'CS') {
-                cs.push(i[0]);
-              }
-              if (i[j] === 'SWE') {
-                swe.push(i[0]);
-              }
-            }
-          }
-          const displayLine = [];
-          displayLine.push('This is the list of our students');
-          displayLine.push(`Number of students: ${response.length - 1}`);
-          displayLine.push(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
-          displayLine.push(`Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`);
-          res.end(`${displayLine.join('\n')}`);
-        });
-    } else {
-      res.end('This is the list of our students');
-    }
+  }
+  if (req.url === '/students') {
+    res.write('This is the list of our students\n');
+    countStudents(db).then((data) => {
+      res.write(`Number of students: ${data.res.length - 1}\n`);
+      res.write(`Number of students in CS: ${data.cs.length}. List: ${data.cs.join(', ')}\n`);
+      res.write(`Number of students in SWE: ${data.swe.length}. List: ${data.swe.join(', ')}`);
+      res.end();
+    }).catch((err) => res.end(err.message));
   }
 });
 
