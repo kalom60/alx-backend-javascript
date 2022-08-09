@@ -7,7 +7,7 @@ const countStudents = (dataPath) => { //eslint-disable-line
         reject(Error('Cannot load the database'));
         return;
       }
-      const lines = data.split('\n').slice(1);
+      const lines = data.toString().split('\n').slice(1);
       const cs = [];
       const swe = [];
       for (const student of lines) {
