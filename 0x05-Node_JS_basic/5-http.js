@@ -7,17 +7,18 @@ const host = 'localhost';
 const port = 1245;
 
 const app = http.createServer((req, res) => {
-  res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
 
   const { url } = req;
 
   if (url === '/') {
-    res.write('Hello Holberton School!');
+    res.writeHead(200);
+    res.end('Hello Holberton School!');
   } else if (url === '/students') {
     if (fs.existsSync(db)) {
       fsPromise.readFile(db)
         .then((data) => {
+          res.writeHead(200);
           const lines = data.toString().split('\n');
           let response = lines.filter((item) => item);
           response = response.map((item) => item.split(','));
@@ -42,11 +43,9 @@ const app = http.createServer((req, res) => {
           res.end(`${displayLine.join('\n')}`);
         });
     } else {
-      throw new Error('Cannot load the database');
+      res.end('This is the list of our students');
     }
   }
-  res.statusCode = 404;
-  res.end();
 });
 
 app.listen(port, host, () => {
