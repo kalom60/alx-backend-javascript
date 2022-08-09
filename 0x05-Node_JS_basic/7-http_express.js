@@ -1,64 +1,60 @@
-// This script will create a simple http server with express
-
 const express = require('express');
 const fs = require('fs');
 
-const argv = process.argv.slice(1);
-const fsPromise = fs.promises;
 const port = 1245;
+const db = process.argv[2];
 const host = 'localhost';
 
 const app = express();
 
-app.get('/', (request, response) => {
-  response.send('Hello Holberton School!');
-});
+function countStudents(path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        reject(Error('This is the list of our students'));
+        return;
+      }
+      const lines = data.toString().split('\n');
+      let response = lines.filter((item) => item);
+      response = response.map((item) => item.split(','));
 
-app.get('/students', (request, response) => {
-  if (fs.existsSync(argv[1])) {
-    fsPromise.readFile(argv[1])
-      .then((content) => {
-        const str = content.toString();
-        const data = str.split('\n');
-        const list = [];
-        for (const i of data) {
-          const student = i.split(',');
-          list.push(student);
-        }
-
-        const newList = list.slice(1, list.length);
-        let fieldCs = 0;
-        const newCs = [];
-        let fieldSwe = 0;
-        const newSwe = [];
-        let counter = 0;
-        for (const i of newList) {
-          for (let j = 0; j < i.length; j += 1) {
-            if (i[j] === 'CS') {
-              counter += 1;
-              fieldCs += 1;
-              newCs.push(i[0]);
-            }
-            if (i[j] === 'SWE') {
-              counter += 1;
-              fieldSwe += 1;
-              newSwe.push(i[0]);
-            }
+      const cs = [];
+      const swe = [];
+      for (const i of response) {
+        for (let j = 0; j < i.length; j += 1) {
+          if (i[j] === 'CS') {
+            cs.push(i[0]);
+          }
+          if (i[j] === 'SWE') {
+            swe.push(i[0]);
           }
         }
-        const string = 'This is the list of our students\n'
-                       + `Number of students: ${counter}\n`
-                       + `Number of students in CS: ${fieldCs}. List: ${newCs.join(', ')}\n`
-                       + `Number of students in SWE: ${fieldSwe}. List: ${newSwe.join(', ')}`;
-        response.send(string);
-      });
-  } else {
-    response.send('This is the list of our students');
+      }
+      const displayLine = [];
+      displayLine.push('This is the list of our students');
+      displayLine.push(`Number of students: ${response.length - 1}`);
+      displayLine.push(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
+      displayLine.push(`Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`);
+      resolve(displayLine);
+    });
+  });
+}
+
+app.get('/', (req, res) => {
+  res.send('Hello Holberton School!');
+});
+
+app.get('/students', async (req, res) => {
+  try {
+    const students = await countStudents(db);
+    res.send(`${students.join('\n')}`);
+  } catch (error) {
+    res.send(`${error.message}`);
   }
 });
 
 app.listen(port, host, () => {
-  process.stdout.write('...');
+  // process.stdin.write(`app listening on port ${port}`);
 });
 
 module.exports = app;
