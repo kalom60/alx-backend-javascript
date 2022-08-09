@@ -39,7 +39,7 @@ app.get('/students', (req, res) => {
         res.send(`${displayLine.join('\n')}`);
       });
   } else {
-    throw new Error('Cannot load the database');
+    res.send('This is the list of our students');
   }
 });
 
