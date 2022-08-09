@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const countStudents = (path) => {
-  try {
+  if (fs.existsSync(path)) {
     const data = fs.readFileSync(path, 'utf-8').split('\n').slice(1);
     const cs = [];
     const swe = [];
@@ -21,7 +21,7 @@ const countStudents = (path) => {
     const sweNames = swe.join(', ');
     console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
     console.log(`Number of students in SWE: ${swe.length}. List: ${sweNames}`);
-  } catch (err) {
+  } else {
     throw new Error('Cannot load the database');
   }
 };
