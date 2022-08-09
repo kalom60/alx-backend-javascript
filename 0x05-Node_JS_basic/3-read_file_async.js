@@ -25,6 +25,8 @@ const countStudents = async (dataPath) => {
     const sweNames = swe.join(', ');
     console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
     console.log(`Number of students in SWE: ${swe.length}. List: ${sweNames}`);
+  } else {
+    throw new Error('Cannot load the database');
   }
 };
 
