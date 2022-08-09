@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const countStudents = (path) =>
+const countStudents = (path) => (
   new Promise((resolve, reject) => {
     const data = fs.readFile(path, 'utf-8').split('\n').slice(1);
     if (!data) {
@@ -24,10 +24,10 @@ const countStudents = (path) =>
       const sweNames = swe.join(', ');
       console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
       console.log(
-        `Number of students in SWE: ${swe.length}. List: ${sweNames}`
+        `Number of students in SWE: ${swe.length}. List: ${sweNames}` //eslint-disable-line
       );
       resolve(true);
     }
-  });
+  }));
 
 module.exports = countStudents;
