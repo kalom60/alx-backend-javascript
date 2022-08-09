@@ -45,7 +45,7 @@ app.get('/students', (req, res) => {
 });
 
 app.listen(port, host, () => {
-  process.stdin.write(`app listening on port ${port}`);
+  // process.stdin.write(`app listening on port ${port}`);
 });
 
 module.exports = app;
