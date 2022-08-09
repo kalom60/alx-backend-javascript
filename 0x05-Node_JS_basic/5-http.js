@@ -1,9 +1,11 @@
 const http = require('http');
 const fs = require('fs');
 
+const fsPromise = fs.promises;
 const db = process.argv.slice(2)[0];
 const host = 'localhost';
 const port = 1245;
+
 const app = http.createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
@@ -13,31 +15,32 @@ const app = http.createServer(async (req, res) => {
   if (url === '/') {
     res.write('Hello Holberton School!');
   } else if (url === '/students') {
-    res.write('This is the list of our students\n');
-    try {
-      const data = fs.readFileSync(db, 'utf-8').split('\n').slice(1);
+    if (fs.existsSync(db)) {
+      const data = await fsPromise.readFile(db);
+      const lines = data.toString().split('\n');
+      let response = lines.filter((item) => item);
+      response = response.map((item) => item.split(','));
+
       const cs = [];
       const swe = [];
-      for (const student of data) {
-        if (student.includes('CS')) {
-          let name = student.split(',').slice(0, 1);
-          name = String(name);
-          cs.push(name);
-        } else {
-          let name = student.split(',').slice(0, 1);
-          name = String(name);
-          swe.push(name);
+      for (const i of response) {
+        for (let j = 0; j < i.length; j += 1) {
+          if (i[j] === 'CS') {
+            cs.push(i[0]);
+          }
+          if (i[j] === 'SWE') {
+            swe.push(i[0]);
+          }
         }
       }
-      console.log(`Number of students: ${data.length}`);
-      const csNames = cs.join(', ');
-      const sweNames = swe.join(', ');
-      console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
-      console.log(
-        `Number of students in SWE: ${swe.length}. List: ${sweNames}` //eslint-disable-line
-      );
-    } catch (err) {
-      res.write(new Error('Cannot load the database'));
+      const displayLine = [];
+      displayLine.push('This is the list of our students');
+      displayLine.push(`Number of students: ${response.length - 1}`);
+      displayLine.push(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
+      displayLine.push(`Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`);
+      res.end(`${displayLine.join('\n')}`);
+    } else {
+      throw new Error('Cannot load the database');
     }
   }
   res.statusCode = 404;
