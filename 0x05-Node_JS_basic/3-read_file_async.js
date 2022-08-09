@@ -24,9 +24,9 @@ async function countStudents(dataPath) {
     console.log(`Number of students: ${res.length - 1}`);
     console.log(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
     console.log(`Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`);
-  } else {
-    throw new Error('Cannot load the database');
+    return { res, cs, swe };
   }
+  throw new Error('Cannot load the database');
 }
 
 module.exports = countStudents;
