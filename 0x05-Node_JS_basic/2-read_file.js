@@ -2,10 +2,11 @@ const fs = require('fs');
 
 const countStudents = (path) => {
   if (fs.existsSync(path)) {
-    const data = fs.readFileSync(path, 'utf-8').split('\n').slice(1);
+    const data = fs.readFileSync(path, { encoding: 'utf-8' });
+    const lines = data.split('\n').slice(1);
     const cs = [];
     const swe = [];
-    for (const student of data) {
+    for (const student of lines) {
       if (student.includes('CS')) {
         let name = student.split(',').slice(0, 1);
         name = String(name);
@@ -16,7 +17,7 @@ const countStudents = (path) => {
         swe.push(name);
       }
     }
-    console.log(`Number of students: ${data.length}`);
+    console.log(`Number of students: ${lines.length}`);
     const csNames = cs.join(', ');
     const sweNames = swe.join(', ');
     console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
