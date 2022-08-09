@@ -12,9 +12,9 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-app.get('/students', async (req, res) => {
+app.get('/students', (req, res) => {
   if (fs.existsSync(db)) {
-    await fsPromise.readFile(db)
+    fsPromise.readFile(db)
       .then((data) => {
         const lines = data.toString().split('\n');
         let response = lines.filter((item) => item);
@@ -40,7 +40,7 @@ app.get('/students', async (req, res) => {
         res.send(`${displayLine.join('\n')}`);
       });
   } else {
-    res.send('This is the list of our students');
+    res.send('Cannot load the database');
   }
 });
 
