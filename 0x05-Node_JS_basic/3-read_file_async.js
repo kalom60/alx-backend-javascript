@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const countStudents = (dataPath) => { //eslint-disable-line
   return new Promise((resolve, reject) => {
-    fs.readFile(dataPath, 'utf-8', (err, data) => {
+    fs.readFile(dataPath, 'utf8', (err, data) => {
       if (err) {
         reject(Error('Cannot load the database'));
         return;
