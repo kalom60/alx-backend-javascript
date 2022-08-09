@@ -44,6 +44,8 @@ app.get('/students', (req, res) => {
   countStudents(db)
     .then((data) => {
       try {
+        res.setHeader('Content-Type', 'text/plain');
+        res.statusCode = 200;
         res.send(`${data.join('\n')}`);
       } catch (err) {
         res.send(data);
