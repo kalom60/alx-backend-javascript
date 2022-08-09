@@ -21,12 +21,14 @@ const countStudents = (dataPath) => { //eslint-disable-line
           swe.push(name);
         }
       }
-      console.log(`Number of students: ${lines.length}`);
-      console.log(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
-      console.log(
+      const res = []
+      res.push(`Number of students: ${lines.length}`);
+      res.push(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
+      res.push(
         `Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}` //eslint-disable-line
       );
-      resolve(lines);
+      console.log(`${res.join('\n')}`);
+      resolve(res);
     });
   });
 };
