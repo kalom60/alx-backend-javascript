@@ -6,7 +6,7 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
       reject(new Error('Cannot load the database'));
     }
     if (data) {
-      const lines = data.split('\n');
+      const lines = data.split('\n').slice(1);
       const cs = [];
       const swe = [];
       for (const student of lines) {
@@ -20,7 +20,7 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
           swe.push(name);
         }
       }
-      console.log(`Number of students: ${data.length}`);
+      console.log(`Number of students: ${lines.length}`);
       const csNames = cs.join(', ');
       const sweNames = swe.join(', ');
       console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
