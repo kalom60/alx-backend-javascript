@@ -10,7 +10,7 @@ class StudentsController {
         for (const stu of Object.keys(data)) {
           const names = data[stu].join(', ');
           resBody.push(
-            `Number of students in ${stu}: ${data[stu].length} List: ${names}` //eslint-disable-line
+            `Number of students in ${stu}: ${data[stu].length}. List: ${names}` //eslint-disable-line
           );
         }
         res.status(200).send(resBody.join('\n'));
