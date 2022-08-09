@@ -1,14 +1,15 @@
 const fs = require('fs');
 
-const countStudents = (path) => (
-  new Promise((resolve, reject) => {
-    const data = fs.readFile(path, 'utf-8').split('\n').slice(1);
-    if (!data) {
+const countStudents = (dataPath) => new Promise((resolve, reject) => {
+  fs.readFile(dataPath, 'utf-8', (err, data) => {
+    if (err) {
       reject(new Error('Cannot load the database'));
-    } else {
+    }
+    if (data) {
+      const lines = data.split('\n');
       const cs = [];
       const swe = [];
-      for (const student of data) {
+      for (const student of lines) {
         if (student.includes('CS')) {
           let name = student.split(',').slice(0, 1);
           name = String(name);
@@ -23,11 +24,10 @@ const countStudents = (path) => (
       const csNames = cs.join(', ');
       const sweNames = swe.join(', ');
       console.log(`Number of students in CS: ${cs.length}. List: ${csNames}`);
-      console.log(
-        `Number of students in SWE: ${swe.length}. List: ${sweNames}` //eslint-disable-line
-      );
+      console.log(`Number of students in SWE: ${swe.length}. List: ${sweNames}`);
       resolve(true);
     }
-  }));
+  });
+});
 
 module.exports = countStudents;
