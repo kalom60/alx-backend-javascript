@@ -1,25 +1,24 @@
 const express = require('express');
 const fs = require('fs');
 
+const db = process.argv.slice(1);
 const fsPromise = fs.promises;
 const port = 1245;
-const db = process.argv[2];
 const host = 'localhost';
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello Holberton School!');
+app.get('/', (request, response) => {
+  response.send('Hello Holberton School!');
 });
 
 app.get('/students', (req, res) => {
-  if (fs.existsSync(db)) {
-    fsPromise.readFile(db)
+  if (fs.existsSync(db[1])) {
+    fsPromise.readFile(db[1])
       .then((data) => {
         const lines = data.toString().split('\n');
         let response = lines.filter((item) => item);
         response = response.map((item) => item.split(','));
-
         const cs = [];
         const swe = [];
         for (const i of response) {
@@ -33,9 +32,9 @@ app.get('/students', (req, res) => {
           }
         }
         const displayLine = 'This is the list of our students\n'
-                       + `Number of students: ${response.length - 1}\n`
-                       + `Number of students in CS: ${cs.length}. List: ${cs.join(', ')}\n`
-                       + `Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`;
+                             + `Number of students: ${response.length - 1}\n`
+                             + `Number of students in CS: ${cs.length}. List: ${cs.join(', ')}\n`
+                             + `Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`;
         res.send(displayLine);
       });
   } else {
@@ -44,7 +43,7 @@ app.get('/students', (req, res) => {
 });
 
 app.listen(port, host, () => {
-  // console.log(`Example app listening on port ${port}`);
+  process.stdout.write('...');
 });
 
 module.exports = app;
