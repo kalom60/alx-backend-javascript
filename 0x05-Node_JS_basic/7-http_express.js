@@ -1,49 +1,58 @@
 const express = require('express');
 const fs = require('fs');
 
-const db = process.argv.slice(1);
 const fsPromise = fs.promises;
 const port = 1245;
+const db = process.argv[2];
 const host = 'localhost';
 
 const app = express();
 
-app.get('/', (request, response) => {
-  response.send('Hello Holberton School!');
+async function countStudents(dataPath) {
+  if (fs.existsSync(dataPath)) {
+    const data = await fsPromise.readFile(dataPath);
+    const lines = data.toString().split('\n');
+    let res = lines.filter((item) => item);
+    res = res.map((item) => item.split(','));
+
+    const cs = [];
+    const swe = [];
+    for (const i of res) {
+      for (let j = 0; j < i.length; j += 1) {
+        if (i[j] === 'CS') {
+          cs.push(i[0]);
+        }
+        if (i[j] === 'SWE') {
+          swe.push(i[0]);
+        }
+      }
+    }
+    const send = [];
+    send.push(`Number of students: ${res.length - 1}`);
+    send.push(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
+    send.push(`Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`);
+    return send;
+  }
+  return 'This is the list of our students';
+}
+
+app.get('/', (req, res) => {
+  res.send('Hello Holberton School!');
 });
 
 app.get('/students', (req, res) => {
-  if (fs.existsSync(db[1])) {
-    fsPromise.readFile(db[1])
-      .then((data) => {
-        const lines = data.toString().split('\n');
-        let response = lines.filter((item) => item);
-        response = response.map((item) => item.split(','));
-        const cs = [];
-        const swe = [];
-        for (const i of response) {
-          for (let j = 0; j < i.length; j += 1) {
-            if (i[j] === 'CS') {
-              cs.push(i[0]);
-            }
-            if (i[j] === 'SWE') {
-              swe.push(i[0]);
-            }
-          }
-        }
-        const displayLine = 'This is the list of our students\n'
-                             + `Number of students: ${response.length - 1}\n`
-                             + `Number of students in CS: ${cs.length}. List: ${cs.join(', ')}\n`
-                             + `Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`;
-        res.send(displayLine);
-      });
-  } else {
-    res.send('This is the list of our students');
-  }
+  countStudents(db)
+    .then((data) => {
+      try {
+        res.send(`${data.join('\n')}`);
+      } catch (err) {
+        res.send(data);
+      }
+    });
 });
 
 app.listen(port, host, () => {
-  process.stdout.write('...');
+  // console.log(`Example app listening on port ${port}`);
 });
 
 module.exports = app;
