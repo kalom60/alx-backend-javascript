@@ -27,6 +27,6 @@ async function countStudents(dataPath) {
   } else {
     throw new Error('Cannot load the database');
   }
-};
+}
 
 module.exports = countStudents;
