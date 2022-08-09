@@ -32,12 +32,11 @@ app.get('/students', (req, res) => {
             }
           }
         }
-        const displayLine = [];
-        displayLine.push('This is the list of our students');
-        displayLine.push(`Number of students: ${response.length - 1}`);
-        displayLine.push(`Number of students in CS: ${cs.length}. List: ${cs.join(', ')}`);
-        displayLine.push(`Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`);
-        res.send(`${displayLine.join('\n')}`);
+        const displayLine = 'This is the list of our students\n'
+                       + `Number of students: ${response.length - 1}\n`
+                       + `Number of students in CS: ${cs.length}. List: ${cs.join(', ')}\n`
+                       + `Number of students in SWE: ${swe.length}. List: ${swe.join(', ')}`;
+        res.send(displayLine);
       });
   } else {
     res.send('This is the list of our students');
