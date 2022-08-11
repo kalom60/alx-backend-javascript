@@ -3,7 +3,6 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const sendPaymentRequestToApi = require('./3-payment');
-const Utils = require('./utils');
 
 describe('', () => {
   let spy;
